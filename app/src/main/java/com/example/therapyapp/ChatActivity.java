@@ -6,16 +6,20 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import javax.annotation.Nullable;
 
 public class ChatActivity extends AppCompatActivity {
     private String userId;
@@ -30,13 +34,6 @@ public class ChatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
-
-        userId = getIntent().getStringExtra("userId");
-        //if (userId == null) {
-        //Toast.makeText(this, "User ID not found", Toast.LENGTH_SHORT).show();
-          //  finish();
-           // return;
-        //}
 
         db = FirebaseFirestore.getInstance();
         listViewMessages = findViewById(R.id.listViewMessages);
@@ -54,6 +51,15 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
+        // Kullanıcı oturumu kontrolü
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser == null) {
+            Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+
+        userId = currentUser.getUid();
         loadMessages();
     }
 
@@ -64,8 +70,11 @@ public class ChatActivity extends AppCompatActivity {
             return;
         }
 
+        // Gönderen kişiyi tanımlama
         Message message = new Message(userId, messageText, System.currentTimeMillis());
-        db.collection("messages").add(message)
+
+        // Mesajı Firestore'a ekleme
+        db.collection("userMessages").document(userId).collection("messages").add(message)
                 .addOnSuccessListener(documentReference -> {
                     editTextMessage.setText("");
                     Toast.makeText(ChatActivity.this, "Message sent", Toast.LENGTH_SHORT).show();
@@ -74,7 +83,9 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void loadMessages() {
-        CollectionReference messagesRef = db.collection("messages");
+        CollectionReference messagesRef = db.collection("userMessages").document(userId).collection("messages");
+
+        // Kullanıcının kendi mesajlarını alacak şekilde filtreleme yapma
         messagesRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException e) {
@@ -84,10 +95,13 @@ public class ChatActivity extends AppCompatActivity {
                 }
 
                 messageList.clear();
-                for (QueryDocumentSnapshot document : snapshots) {
+                for (DocumentSnapshot document : snapshots) {
                     Message message = document.toObject(Message.class);
                     messageList.add(message);
                 }
+
+                // Mesajları tersine çevirerek en son gönderilenin en alta gelmesini sağla
+                Collections.reverse(messageList);
                 messageAdapter.notifyDataSetChanged();
             }
         });

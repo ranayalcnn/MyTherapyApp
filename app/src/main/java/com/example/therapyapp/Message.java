@@ -1,6 +1,5 @@
 package com.example.therapyapp;
 
-
 public class Message {
     private String senderId;
     private String message;
