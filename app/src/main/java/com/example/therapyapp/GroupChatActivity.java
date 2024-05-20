@@ -25,6 +25,22 @@ public class GroupChatActivity extends AppCompatActivity {
             }
         });
 
+        Button logoutButton = findViewById(R.id.logoutButton);
+        logoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Oturum yöneticisi sınıfınızı kullanarak kullanıcıyı oturumdan çıkarın.
+                // Örneğin:
+                // SessionManager.logout();
+
+                // Ardından, giriş ekranına yönlendirin veya giriş ekranını başlatın.
+                Intent intent = new Intent(GroupChatActivity.this, LoginActivity.class);
+                startActivity(intent);
+                finish(); // Aktiviteyi kapatın, böylece geri butonuna basıldığında tekrar buraya dönülmez.
+            }
+        });
+
+
         chatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
