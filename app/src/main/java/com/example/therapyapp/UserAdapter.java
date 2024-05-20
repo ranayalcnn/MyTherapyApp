@@ -32,18 +32,7 @@ public class UserAdapter extends ArrayAdapter<User> {
         TextView textViewName = convertView.findViewById(R.id.textViewName);
         TextView textViewDisorder = convertView.findViewById(R.id.textViewDisorder);
 
-        // Eski işlevler burada olacak
-
-        // Eğer kullanıcı odaya girmişse, bir işaret göster
-        if (user.userInRoom()) {
-            // Örnek olarak, kullanıcı adının yanında bir işaret gösterelim
-            textViewName.setText(user.getName() + " ✓");
-        } else {
-            // Odada değilse, normal kullanıcı adını göster
-            textViewName.setText(user.getName());
-        }
-
-        // Diğer özellikleri de göster
+        textViewName.setText(user.getName());
         textViewDisorder.setText(user.getDisorder());
 
         return convertView;

@@ -1,10 +1,15 @@
 package com.example.therapyapp;
 
+
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
@@ -17,6 +22,9 @@ public class Room1Activity extends AppCompatActivity {
     private TextView occupancyTextView; // Doluluk oranını gösteren TextView
     private FirebaseFirestore firestore;
     private ListenerRegistration userListener;
+
+    private FirebaseAuth mAuth;
+    private VoiceCallManager voiceCallManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +50,28 @@ public class Room1Activity extends AppCompatActivity {
 
         // Firestore'dan kullanıcıları dinleme
         listenForUsers();
+
+        mAuth = FirebaseAuth.getInstance();
+
+        // VoiceCallManager'ı oluştur
+        voiceCallManager = new VoiceCallManager(Room1Activity.this, new VoiceCallManager.VoiceCallListener() {
+            @Override
+            public void onVoiceSearchResult(String result) {
+                // Sesli arama sonuçlarını işleyebilirsiniz
+                // Örneğin, sonuçları bir metin görüntüleyicisine yerleştirebilirsiniz
+                // textView.setText(result);
+            }
+        });
+
+        // Butonu bul ve tıklama işlevselliğini ekle
+        Button voiceSearchButton = findViewById(R.id.voiceSearchButton);
+        voiceSearchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // VoiceCallManager ile sesli aramayı başlat
+                voiceCallManager.startVoiceSearch();
+            }
+        });
     }
 
     // Firestore'dan kullanıcıları dinlemek için

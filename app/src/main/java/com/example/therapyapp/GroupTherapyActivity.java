@@ -1,5 +1,6 @@
 package com.example.therapyapp;
 
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
@@ -8,16 +9,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.example.therapyapp.RoomAdapter;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-
 import java.util.ArrayList;
 
 public class GroupTherapyActivity extends AppCompatActivity implements RoomAdapter.OnRoomClickListener {
@@ -25,7 +18,6 @@ public class GroupTherapyActivity extends AppCompatActivity implements RoomAdapt
     private RecyclerView recyclerView;
     private RoomAdapter roomAdapter;
     private ArrayList<Room> roomList;
-    private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +25,6 @@ public class GroupTherapyActivity extends AppCompatActivity implements RoomAdapt
         setContentView(R.layout.activity_main);
 
         mAuth = FirebaseAuth.getInstance();
-        db = FirebaseFirestore.getInstance();
 
         // Kullanıcı oturum açmış mı diye kontrol et
         checkUserAuthentication();
@@ -55,38 +46,22 @@ public class GroupTherapyActivity extends AppCompatActivity implements RoomAdapt
     }
 
     private void initializeRooms() {
-        // Initialize roomList
+        // Odaları oluştur ve listele
         roomList = new ArrayList<>();
+        roomList.add(new Room(1, 6));
+        roomList.add(new Room(2, 6));
+        roomList.add(new Room(3, 6));
 
-        // Fetch room data from Firestore
-        db.collection("rooms")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                String roomId = document.getId();
-                                int capacity = document.getLong("capacity").intValue();
-                                int currentOccupancy = document.getLong("currentOccupancy").intValue();
-                                roomList.add(new Room(roomId, capacity, currentOccupancy));
-                            }
+        // Odaları doluluk oranına göre sırala
+        insertionSort(roomList);
 
-                            // Sort roomList based on occupancy
-                            insertionSort(roomList);
+        // RecyclerView'ı bul ve ayarla
+        recyclerView = findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-                            // Initialize RecyclerView
-                            recyclerView = findViewById(R.id.recyclerView);
-                            recyclerView.setLayoutManager(new LinearLayoutManager(GroupTherapyActivity.this));
-
-                            // Initialize RoomAdapter and set it to RecyclerView
-                            roomAdapter = new RoomAdapter(roomList, GroupTherapyActivity.this);
-                            recyclerView.setAdapter(roomAdapter);
-                        } else {
-                            Toast.makeText(GroupTherapyActivity.this, "Error fetching rooms", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
+        // RoomAdapter'ı oluştur ve RecyclerView'a set et
+        roomAdapter = new RoomAdapter(roomList, this); // Odalara tıklama dinleyicisini (listener) ekledik
+        recyclerView.setAdapter(roomAdapter);
     }
 
     // Insertion Sort algoritması
@@ -107,11 +82,26 @@ public class GroupTherapyActivity extends AppCompatActivity implements RoomAdapt
 
     // Odalara tıklandığında gerçekleşecek eylem
     @Override
-    public void onRoomClick(String roomId) {
+
+    public void onRoomClick(int roomId) {
         // Tıklanan oda numarasına göre ilgili aktiviteye yönlendirme yapılabilir
         // Örneğin, tıklanan odaya göre farklı aktivitelere yönlendirme yapılabilir
-        Intent intent = new Intent(GroupTherapyActivity.this, Room1Activity.class);
-        intent.putExtra("roomId", roomId); // Pass the room ID as an extra
-        startActivity(intent);
+        switch (roomId) {
+            case 1:
+                startActivity(new Intent(GroupTherapyActivity.this, Room1Activity.class));
+                break;
+            case 2:
+                startActivity(new Intent(GroupTherapyActivity.this, Room2Activity.class));
+                break;
+            case 3:
+                startActivity(new Intent(GroupTherapyActivity.this, Room3Activity.class));
+                break;
+            default:
+                // Varsayılan olarak bir işlem yapılabilir veya hata mesajı gösterilebilir
+                Toast.makeText(this, "Belirtilen oda bulunamadı.", Toast.LENGTH_SHORT).show();
+                break;
+        }
     }
+
+
 }

@@ -74,7 +74,7 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.RoomViewHolder
 
     // Butona tıklama dinleyicisi (listener) arayüzü
     public interface OnRoomClickListener {
-        void onRoomClick(String roomId);
+        void onRoomClick(int roomId);
     }
 
     // Odaları insertion sort algoritması kullanarak sıralama
