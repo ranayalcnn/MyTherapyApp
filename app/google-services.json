@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1088001583782",
+    "project_id": "therapyapp-fe13e",
+    "storage_bucket": "therapyapp-fe13e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1088001583782:android:de76aa6eb0eb3a95b5a267",
+        "android_client_info": {
+          "package_name": "com.example.therapyapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBdsX68ehXqyvlVp5beLc6fAvy1b5Ip4ac"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

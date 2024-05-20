@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#E9000000"
+    android:padding="16dp">
+
+    <!-- Oda Başlığı -->
+    <TextView
+        android:id="@+id/roomTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Room"
+        android:textColor="#CEF8F2F2"
+        android:textSize="24sp"
+        android:layout_marginTop="16dp" />
+
+    <!-- Sesli Arama Butonu -->
+    <Button
+        android:id="@+id/voiceSearchButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/roomTextView"
+        android:text="Sesli Arama Başlat"
+        android:layout_marginTop="16dp" />
+
+    <!-- Kullanıcı Listesi ListView -->
+    <ListView
+        android:id="@+id/userListView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/voiceSearchButton"
+        android:layout_marginTop="16dp"
+        android:divider="#FFF"
+        android:dividerHeight="1dp"
+        android:background="#FFF"/>
+
+    <!-- Doluluk Oranını Gösterecek TextView -->
+    <TextView
+        android:id="@+id/occupancyTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/userListView"
+        android:layout_marginTop="16dp"
+        android:textColor="#FFF"
+        android:text="Doluluk Oranı: 0"
+        android:textSize="18sp"/>
+
+    <!-- Sonuç Metni -->
+    <TextView
+        android:id="@+id/resultTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/occupancyTextView"
+        android:layout_marginTop="16dp"
+        android:padding="16dp"
+        android:text="Sonuç burada görünecek"
+        android:textColor="#FFF"/>
+
+</RelativeLayout>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">TherapyApp</string>
+
+    <string-array name="disorders_array">
+        <item>Depression</item>
+        <item>Anxiety</item>
+        <item>Bipolar</item>
+        <item>OKB</item>
+        <!-- Diğer bozuklukları ekleyin -->
+    </string-array>
+</resources>
