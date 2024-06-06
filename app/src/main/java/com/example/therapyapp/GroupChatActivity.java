@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-
 import androidx.appcompat.app.AppCompatActivity;
 
 public class GroupChatActivity extends AppCompatActivity {
@@ -14,37 +13,37 @@ public class GroupChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_chat);
 
+        // Initialize buttons
         Button groupButton = findViewById(R.id.groupButton);
         Button chatButton = findViewById(R.id.chatButton);
+        Button logoutButton = findViewById(R.id.logoutButton);
 
+        // Set click listener for groupButton
         groupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Grup aktivitesine git
+                // Navigate to GroupTherapyActivity
                 startActivity(new Intent(GroupChatActivity.this, GroupTherapyActivity.class));
             }
         });
 
-        Button logoutButton = findViewById(R.id.logoutButton);
+        // Set click listener for logoutButton
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Oturum yöneticisi sınıfınızı kullanarak kullanıcıyı oturumdan çıkarın.
-                // Örneğin:
-                // SessionManager.logout();
-
-                // Ardından, giriş ekranına yönlendirin veya giriş ekranını başlatın.
+                // Logout user and navigate to LoginActivity
+                // Example: SessionManager.logout();
                 Intent intent = new Intent(GroupChatActivity.this, LoginActivity.class);
                 startActivity(intent);
-                finish(); // Aktiviteyi kapatın, böylece geri butonuna basıldığında tekrar buraya dönülmez.
+                finish(); // Close current activity to prevent return on back press
             }
         });
 
-
+        // Set click listener for chatButton
         chatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Sohbet aktivitesine git
+                // Navigate to FilterUsersActivity
                 startActivity(new Intent(GroupChatActivity.this, FilterUsersActivity.class));
             }
         });

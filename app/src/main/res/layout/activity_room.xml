@@ -5,7 +5,7 @@
     android:background="#E9000000"
     android:padding="16dp">
 
-    <!-- Oda Başlığı -->
+    <!-- Room Title -->
     <TextView
         android:id="@+id/roomTextView"
         android:layout_width="wrap_content"
@@ -15,7 +15,7 @@
         android:textSize="24sp"
         android:layout_marginTop="16dp" />
 
-    <!-- Sesli Arama Butonu -->
+    <!-- Voice Call Button -->
     <Button
         android:id="@+id/voiceSearchButton"
         android:layout_width="wrap_content"
@@ -25,7 +25,7 @@
         android:backgroundTint="@color/colorPrimary"
         android:layout_marginTop="16dp" />
 
-    <!-- Kullanıcı Listesi ListView -->
+    <!-- User List ListView -->
     <ListView
         android:id="@+id/userListView"
         android:layout_width="match_parent"
@@ -36,7 +36,7 @@
         android:dividerHeight="1dp"
         android:background="#FFF"/>
 
-    <!-- Doluluk Oranını Gösterecek TextView -->
+    <!-- Occupancy Rate TextView -->
     <TextView
         android:id="@+id/occupancyTextView"
         android:layout_width="wrap_content"
@@ -44,10 +44,10 @@
         android:layout_below="@id/userListView"
         android:layout_marginTop="16dp"
         android:textColor="#FFF"
-        android:text="Doluluk Oranı: 0"
+        android:text="Occupancy Rate: 0"
         android:textSize="18sp"/>
 
-    <!-- Sonuç Metni -->
+    <!-- Result TextView -->
     <TextView
         android:id="@+id/resultTextView"
         android:layout_width="match_parent"
@@ -55,7 +55,7 @@
         android:layout_below="@id/occupancyTextView"
         android:layout_marginTop="16dp"
         android:padding="16dp"
-        android:text="Sonuç burada görünecek"
+        android:text="Results will appear here"
         android:textColor="#FFF"/>
 
 </RelativeLayout>

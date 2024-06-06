@@ -114,6 +114,7 @@
         android:padding="5dp"
         android:textSize="14sp" />
 
+    <!-- Sign In Button -->
     <Button
         android:id="@+id/signInButton"
         android:layout_width="wrap_content"
@@ -127,5 +128,4 @@
         android:padding="5dp"
         android:textSize="14sp"
         android:backgroundTint="@color/colorPrimary"/>
-
 </RelativeLayout>

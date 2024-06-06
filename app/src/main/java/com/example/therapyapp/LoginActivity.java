@@ -25,12 +25,15 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_activity);
 
+        // Initialize FirebaseAuth instance
         mAuth = FirebaseAuth.getInstance();
         firestoreHelper = new FirestoreHelper();
 
+        // Initialize input fields
         usernameEditText = findViewById(R.id.usernameEditText);
         passwordEditText = findViewById(R.id.passwordEditText);
 
+        // Set up login button click listener
         Button loginButton = findViewById(R.id.loginButton);
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -39,19 +42,23 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        // Set up register text view click listener
         TextView registerTextView = findViewById(R.id.registerTextView);
         registerTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Navigate to RegisterActivity
                 startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
             }
         });
     }
 
+    // Method to handle user login
     private void loginUser() {
         String email = usernameEditText.getText().toString().trim();
         String password = passwordEditText.getText().toString().trim();
 
+        // Validate email and password inputs
         if (TextUtils.isEmpty(email)) {
             usernameEditText.setError("Email is required");
             return;
@@ -62,20 +69,22 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
+        // Authenticate user with Firebase
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // Kullanıcı girişi başarılı, Firestore'da kullanıcı verilerini kaydet
+                            // Login successful, save user data to Firestore
                             String userId = mAuth.getCurrentUser().getUid();
                             firestoreHelper.saveUserData(userId, email);
 
                             Toast.makeText(LoginActivity.this, "Login successful.", Toast.LENGTH_SHORT).show();
+                            // Navigate to GroupChatActivity
                             startActivity(new Intent(LoginActivity.this, GroupChatActivity.class));
-                            finish();
+                            finish(); // Close LoginActivity
                         } else {
-                            // Kullanıcı girişi başarısız
+                            // Login failed, show error message
                             Toast.makeText(LoginActivity.this, "Login failed. " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }

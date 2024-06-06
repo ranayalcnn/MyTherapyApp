@@ -24,7 +24,7 @@
             android:textColor="@android:color/white" />
     </LinearLayout>
 
-    <!-- ListView for messages -->
+    <!-- ListView to display messages -->
     <ListView
         android:id="@+id/listViewMessages"
         android:layout_width="match_parent"
@@ -33,7 +33,7 @@
         android:background="@android:color/transparent"
         android:dividerHeight="10dp" />
 
-    <!-- Bottom panel for message input and sending options -->
+    <!-- Bottom panel for message input and send options -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -43,9 +43,7 @@
         android:layout_marginTop="8dp"
         android:elevation="2dp">
 
-
-        <!-- Button to send media -->
-
+        <!-- EditText for typing messages -->
         <EditText
             android:id="@+id/editTextMessage"
             android:layout_width="0dp"
@@ -59,6 +57,7 @@
             android:textColorHint="@android:color/black"
             android:textSize="16sp" />
 
+        <!-- Button to send the message -->
         <Button
             android:id="@+id/buttonSend"
             android:layout_width="wrap_content"

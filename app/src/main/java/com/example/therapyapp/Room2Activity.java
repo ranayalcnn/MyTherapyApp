@@ -1,14 +1,12 @@
 package com.example.therapyapp;
 
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import androidx.annotation.NonNull;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -18,124 +16,133 @@ import java.util.List;
 
 public class Room2Activity extends AppCompatActivity {
     private int roomId;
-    private List<User> userList; // Odadaki kullanıcıların listesi
-    private TextView occupancyTextView; // Doluluk oranını gösteren TextView
+    private List<User> userList;
+    private TextView occupancyTextView;
     private FirebaseFirestore firestore;
     private ListenerRegistration userListener;
-
-
     private FirebaseAuth mAuth;
-    private VoiceCallManager voiceCallManager; // VoiceCallManager nesnesi
-
-
+    private VoiceCallManager voiceCallManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room);
 
-        // Firestore başlat
-        firestore = FirebaseFirestore.getInstance();
-
-        // Intent'ten roomId al
-        Intent intent = getIntent();
-        roomId = intent.getIntExtra("roomId", -1);
-
-        // roomId'ye göre sayfayı ayarla
-        TextView roomTextView = findViewById(R.id.roomTextView);
-        roomTextView.setText("Oda " + roomId);
-
-        // Doluluk oranını gösteren TextView'i bul
-        occupancyTextView = findViewById(R.id.occupancyTextView);
-
-        // Odadaki kullanıcı listesini oluştur
-        userList = new ArrayList<>();
-
-        // Firestore'dan kullanıcıları dinleme
+        initializeComponents();
+        setupVoiceCallManager();
         listenForUsers();
+    }
 
+    /**
+     * Initialize UI components and Firestore instance.
+     */
+    private void initializeComponents() {
+        firestore = FirebaseFirestore.getInstance();
+        roomId = getIntent().getIntExtra("roomId", -1);
+
+        TextView roomTextView = findViewById(R.id.roomTextView);
+        roomTextView.setText("Room " + roomId);
+
+        occupancyTextView = findViewById(R.id.occupancyTextView);
+        userList = new ArrayList<>();
 
         mAuth = FirebaseAuth.getInstance();
 
-        // VoiceCallManager'ı oluştur
-        voiceCallManager = new VoiceCallManager(Room2Activity.this, new VoiceCallManager.VoiceCallListener() {
-            @Override
-            public void onVoiceSearchResult(String result) {
-                // Sesli arama sonuçlarını işleyebilirsiniz
-                // Örneğin, sonuçları bir metin görüntüleyicisine yerleştirebilirsiniz
-                // textView.setText(result);
-            }
-        });
-
-        // Butonu bul ve tıklama işlevselliğini ekle
         Button voiceSearchButton = findViewById(R.id.voiceSearchButton);
-        voiceSearchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // VoiceCallManager ile sesli aramayı başlat
-                voiceCallManager.startVoiceSearch();
-            }
-        });
-
+        voiceSearchButton.setOnClickListener(this::startVoiceSearch);
     }
 
-    // Firestore'dan kullanıcıları dinlemek için
+    /**
+     * Set up the VoiceCallManager and its listener.
+     */
+    private void setupVoiceCallManager() {
+        voiceCallManager = new VoiceCallManager(this, this::handleVoiceSearchResult);
+    }
+
+    private void handleVoiceSearchResult(String result) {
+        showToast("Voice search result: " + result);
+    }
+
+    /**
+     * Start voice search when button is clicked.
+     */
+    private void startVoiceSearch(View v) {
+        voiceCallManager.startVoiceSearch();
+    }
+
+    /**
+     * Listen for user changes in Firestore.
+     */
     private void listenForUsers() {
         userListener = firestore.collection("rooms").document(String.valueOf(roomId)).collection("users")
                 .addSnapshotListener((value, error) -> {
                     if (error != null) {
-                        // Hata varsa işleme gerekirse burada ele alınabilir
+                        showToast("Firestore error: " + error.getMessage());
                         return;
                     }
 
                     if (value != null) {
                         for (DocumentChange dc : value.getDocumentChanges()) {
-                            switch (dc.getType()) {
-                                case ADDED:
-                                    // Kullanıcı eklendiğinde
-                                    User user = dc.getDocument().toObject(User.class);
-                                    userEnteredRoom(user);
-                                    break;
-                                case REMOVED:
-                                    // Kullanıcı kaldırıldığında
-                                    User removedUser = dc.getDocument().toObject(User.class);
-                                    userLeftRoom(removedUser);
-                                    break;
-                                // Diğer durumlar için gerekirse işlemler eklenebilir
-                            }
+                            handleDocumentChange(dc);
                         }
                     }
                 });
     }
 
-    // Kullanıcı odaya girdiğinde çağrılır
+    /**
+     * Handle changes in Firestore document.
+     */
+    private void handleDocumentChange(DocumentChange dc) {
+        switch (dc.getType()) {
+            case ADDED:
+                User user = dc.getDocument().toObject(User.class);
+                userEnteredRoom(user);
+                break;
+            case REMOVED:
+                User removedUser = dc.getDocument().toObject(User.class);
+                userLeftRoom(removedUser);
+                break;
+            default:
+                break;
+        }
+    }
+
+    /**
+     * Add user to the list when they enter the room.
+     */
     private void userEnteredRoom(User user) {
         if (!userList.contains(user)) {
             userList.add(user);
-            // Doluluk oranını güncelle
             updateOccupancy();
         }
     }
 
-    // Kullanıcı odayı terk ettiğinde çağrılır
+    /**
+     * Remove user from the list when they leave the room.
+     */
     private void userLeftRoom(User user) {
-        if (userList.contains(user)) {
-            userList.remove(user);
-            // Doluluk oranını güncelle
-            updateOccupancy();
-        }
+        userList.remove(user);
+        updateOccupancy();
     }
 
-    // Doluluk oranını güncelle
+    /**
+     * Update the occupancy rate TextView.
+     */
     private void updateOccupancy() {
-        int occupancy = userList.size(); // Odadaki kullanıcı sayısı
-        occupancyTextView.setText("Doluluk Oranı: " + occupancy);
+        int occupancy = userList.size();
+        occupancyTextView.setText("Occupancy Rate: " + occupancy);
+    }
+
+    /**
+     * Show a toast message.
+     */
+    private void showToast(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        // Listener'ı kaldır
         if (userListener != null) {
             userListener.remove();
         }

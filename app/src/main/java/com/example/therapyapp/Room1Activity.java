@@ -1,6 +1,5 @@
 package com.example.therapyapp;
 
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -18,8 +17,8 @@ import java.util.List;
 
 public class Room1Activity extends AppCompatActivity {
     private int roomId;
-    private List<User> userList; // Odadaki kullanıcıların listesi
-    private TextView occupancyTextView; // Doluluk oranını gösteren TextView
+    private List<User> userList; // List of users in the room
+    private TextView occupancyTextView; // TextView to display occupancy rate
     private FirebaseFirestore firestore;
     private ListenerRegistration userListener;
 
@@ -31,55 +30,55 @@ public class Room1Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room);
 
-        // Firestore başlat
+        // Initialize Firestore
         firestore = FirebaseFirestore.getInstance();
 
-        // Intent'ten roomId al
+        // Get roomId from Intent
         Intent intent = getIntent();
         roomId = intent.getIntExtra("roomId", -1);
 
-        // roomId'ye göre sayfayı ayarla
+        // Set up the page based on roomId
         TextView roomTextView = findViewById(R.id.roomTextView);
-        roomTextView.setText("Oda " + roomId);
+        roomTextView.setText("Room " + roomId);
 
-        // Doluluk oranını gösteren TextView'i bul
+        // Initialize the occupancy TextView
         occupancyTextView = findViewById(R.id.occupancyTextView);
 
-        // Odadaki kullanıcı listesini oluştur
+        // Initialize the list of users in the room
         userList = new ArrayList<>();
 
-        // Firestore'dan kullanıcıları dinleme
+        // Listen for users in the room
         listenForUsers();
 
         mAuth = FirebaseAuth.getInstance();
 
-        // VoiceCallManager'ı oluştur
+        // Create VoiceCallManager instance
         voiceCallManager = new VoiceCallManager(Room1Activity.this, new VoiceCallManager.VoiceCallListener() {
             @Override
             public void onVoiceSearchResult(String result) {
-                // Sesli arama sonuçlarını işleyebilirsiniz
-                // Örneğin, sonuçları bir metin görüntüleyicisine yerleştirebilirsiniz
+                // Handle voice search results
+                // For example, display the result in a TextView
                 // textView.setText(result);
             }
         });
 
-        // Butonu bul ve tıklama işlevselliğini ekle
+        // Set up the voice search button click listener
         Button voiceSearchButton = findViewById(R.id.voiceSearchButton);
         voiceSearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // VoiceCallManager ile sesli aramayı başlat
+                // Start voice search with VoiceCallManager
                 voiceCallManager.startVoiceSearch();
             }
         });
     }
 
-    // Firestore'dan kullanıcıları dinlemek için
+    // Listen for users in the room from Firestore
     private void listenForUsers() {
         userListener = firestore.collection("rooms").document(String.valueOf(roomId)).collection("users")
                 .addSnapshotListener((value, error) -> {
                     if (error != null) {
-                        // Hata varsa işleme gerekirse burada ele alınabilir
+                        // Handle errors if necessary
                         return;
                     }
 
@@ -87,50 +86,50 @@ public class Room1Activity extends AppCompatActivity {
                         for (DocumentChange dc : value.getDocumentChanges()) {
                             switch (dc.getType()) {
                                 case ADDED:
-                                    // Kullanıcı eklendiğinde
+                                    // When a user is added
                                     User user = dc.getDocument().toObject(User.class);
                                     userEnteredRoom(user);
                                     break;
                                 case REMOVED:
-                                    // Kullanıcı kaldırıldığında
+                                    // When a user is removed
                                     User removedUser = dc.getDocument().toObject(User.class);
                                     userLeftRoom(removedUser);
                                     break;
-                                // Diğer durumlar için gerekirse işlemler eklenebilir
+                                // Additional cases can be added if needed
                             }
                         }
                     }
                 });
     }
 
-    // Kullanıcı odaya girdiğinde çağrılır
+    // Called when a user enters the room
     private void userEnteredRoom(User user) {
         if (!userList.contains(user)) {
             userList.add(user);
-            // Doluluk oranını güncelle
+            // Update occupancy
             updateOccupancy();
         }
     }
 
-    // Kullanıcı odayı terk ettiğinde çağrılır
+    // Called when a user leaves the room
     private void userLeftRoom(User user) {
         if (userList.contains(user)) {
             userList.remove(user);
-            // Doluluk oranını güncelle
+            // Update occupancy
             updateOccupancy();
         }
     }
 
-    // Doluluk oranını güncelle
+    // Update the occupancy rate
     private void updateOccupancy() {
-        int occupancy = userList.size(); // Odadaki kullanıcı sayısı
-        occupancyTextView.setText("Doluluk Oranı: " + occupancy);
+        int occupancy = userList.size(); // Number of users in the room
+        occupancyTextView.setText("Occupancy Rate: " + occupancy);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        // Listener'ı kaldır
+        // Remove the listener
         if (userListener != null) {
             userListener.remove();
         }

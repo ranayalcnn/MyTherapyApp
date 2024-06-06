@@ -8,6 +8,7 @@
     android:foregroundTint="#E9FFFFFF"
     tools:context=".MainActivity">
 
+    <!-- RecyclerView to display the list of items -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"

@@ -31,13 +31,13 @@ public class VoiceCallManager {
             Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
             intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
             intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
-            intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Lütfen konuşun");
+            intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Please speak");
 
             try {
                 ((AppCompatActivity) context).startActivityForResult(intent, REQUEST_CODE_VOICE_SEARCH);
             } catch (Exception e) {
                 e.printStackTrace();
-                Toast.makeText(context, "Sesli arama başlatılırken bir hata oluştu", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "An error occurred while starting the voice search", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -45,10 +45,10 @@ public class VoiceCallManager {
     private boolean checkPermissions() {
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale((AppCompatActivity) context, Manifest.permission.RECORD_AUDIO)) {
-                // İzin daha önce reddedildi, kullanıcıya neden bu iznin gerektiği açıklanıyor
-                Toast.makeText(context, "Mikrofon erişimi gerekiyor", Toast.LENGTH_SHORT).show();
+                // Permission was previously denied, explaining why the permission is needed to the user
+                Toast.makeText(context, "Microphone access is required", Toast.LENGTH_SHORT).show();
             }
-            // İzin isteniyor
+            // Request permission
             ActivityCompat.requestPermissions((AppCompatActivity) context, new String[]{Manifest.permission.RECORD_AUDIO}, REQUEST_CODE_PERMISSIONS);
             return false;
         }
@@ -60,8 +60,8 @@ public class VoiceCallManager {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 startVoiceSearch();
             } else {
-                // İzin reddedildi
-                Toast.makeText(context, "Mikrofon erişimi reddedildi", Toast.LENGTH_SHORT).show();
+                // Permission denied
+                Toast.makeText(context, "Microphone access denied", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -70,12 +70,12 @@ public class VoiceCallManager {
         if (requestCode == REQUEST_CODE_VOICE_SEARCH && resultCode == AppCompatActivity.RESULT_OK && data != null) {
             ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
             if (result != null && !result.isEmpty()) {
-                // Tüm sonuçlar kullanıcıya gösteriliyor
+                // Display all results to the user
                 StringBuilder allResults = new StringBuilder();
                 for (String res : result) {
                     allResults.append(res).append("\n");
                 }
-                Toast.makeText(context, "Sesli arama sonuçları:\n" + allResults.toString(), Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "Voice search results:\n" + allResults.toString(), Toast.LENGTH_LONG).show();
                 voiceCallListener.onVoiceSearchResult(allResults.toString());
             }
         }

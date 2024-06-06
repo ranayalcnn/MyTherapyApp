@@ -1,10 +1,8 @@
 package com.example.therapyapp;
 
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -24,54 +22,52 @@ public class GroupTherapyActivity extends AppCompatActivity implements RoomAdapt
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Initialize FirebaseAuth instance
         mAuth = FirebaseAuth.getInstance();
 
-        // Kullanıcı oturum açmış mı diye kontrol et
+        // Check if user is authenticated
         checkUserAuthentication();
     }
 
+    // Check user authentication status
     private void checkUserAuthentication() {
-        // Firebase Authentication örneği al
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        // Kullanıcı oturum açmış mı kontrol et
         if (currentUser == null) {
-            // Kullanıcı oturum açmamışsa, LoginActivity'e yönlendir
+            // If user is not authenticated, navigate to LoginActivity
             startActivity(new Intent(GroupTherapyActivity.this, LoginActivity.class));
-            // Bu aktiviteyi kapat
-            finish();
+            finish(); // Close current activity
         } else {
-            // Kullanıcı oturum açmışsa, odaları listele
+            // If user is authenticated, initialize rooms
             initializeRooms();
         }
     }
 
+    // Initialize and display rooms
     private void initializeRooms() {
-        // Odaları oluştur ve listele
         roomList = new ArrayList<>();
         roomList.add(new Room(1, 6));
         roomList.add(new Room(2, 6));
         roomList.add(new Room(3, 6));
 
-        // Odaları doluluk oranına göre sırala
+        // Sort rooms by occupancy
         insertionSort(roomList);
 
-        // RecyclerView'ı bul ve ayarla
+        // Set up RecyclerView
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        // RoomAdapter'ı oluştur ve RecyclerView'a set et
-        roomAdapter = new RoomAdapter(roomList, this); // Odalara tıklama dinleyicisini (listener) ekledik
+        
+        // Set up RoomAdapter
+        roomAdapter = new RoomAdapter(roomList, this);
         recyclerView.setAdapter(roomAdapter);
     }
 
-    // Insertion Sort algoritması
+    // Insertion sort algorithm to sort rooms by occupancy
     public static void insertionSort(ArrayList<Room> rooms) {
         int n = rooms.size();
         for (int i = 1; i < n; ++i) {
             Room key = rooms.get(i);
             int j = i - 1;
 
-            // Odaları doluluk oranına göre sırala
             while (j >= 0 && rooms.get(j).getCurrentOccupancy() < key.getCurrentOccupancy()) {
                 rooms.set(j + 1, rooms.get(j));
                 j = j - 1;
@@ -80,12 +76,10 @@ public class GroupTherapyActivity extends AppCompatActivity implements RoomAdapt
         }
     }
 
-    // Odalara tıklandığında gerçekleşecek eylem
+    // Handle room click events
     @Override
-
     public void onRoomClick(int roomId) {
-        // Tıklanan oda numarasına göre ilgili aktiviteye yönlendirme yapılabilir
-        // Örneğin, tıklanan odaya göre farklı aktivitelere yönlendirme yapılabilir
+        // Navigate to the corresponding activity based on room ID
         switch (roomId) {
             case 1:
                 startActivity(new Intent(GroupTherapyActivity.this, Room1Activity.class));
@@ -97,11 +91,9 @@ public class GroupTherapyActivity extends AppCompatActivity implements RoomAdapt
                 startActivity(new Intent(GroupTherapyActivity.this, Room3Activity.class));
                 break;
             default:
-                // Varsayılan olarak bir işlem yapılabilir veya hata mesajı gösterilebilir
+                // Show error message if room ID is not found
                 Toast.makeText(this, "Belirtilen oda bulunamadı.", Toast.LENGTH_SHORT).show();
                 break;
         }
     }
-
-
 }

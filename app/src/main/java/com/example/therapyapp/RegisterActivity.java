@@ -25,12 +25,14 @@ public class RegisterActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
+        // Initialize EditText fields
         nameEditText = findViewById(R.id.nameEditText);
         surnameEditText = findViewById(R.id.surnameEditText);
         emailEditText = findViewById(R.id.emailEditText);
         usernameEditText = findViewById(R.id.usernameEditText);
         passwordEditText = findViewById(R.id.passwordEditText);
 
+        // Set click listener on register button
         Button registerButton = findViewById(R.id.registerButton);
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -40,10 +42,12 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
+    // Method to handle user registration
     private void registerUser() {
         String email = emailEditText.getText().toString().trim();
         String password = passwordEditText.getText().toString().trim();
 
+        // Check if email and password fields are empty
         if (TextUtils.isEmpty(email)) {
             emailEditText.setError("Email is required");
             return;
@@ -54,17 +58,18 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
+        // Create a new user with email and password
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
+                            // Sign in success, show a success message and navigate to LoginActivity
                             Toast.makeText(RegisterActivity.this, "Registration successful.", Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
                             finish();
-                        }else {
-                            // If sign in fails, display a message to the user.
+                        } else {
+                            // If sign in fails, display a message to the user
                             Toast.makeText(RegisterActivity.this, "Registration failed. " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }

@@ -1,12 +1,11 @@
 package com.example.therapyapp;
 
-
 public class User {
     private String userId;
     private String name;
     private String disorder;
 
-    // Boş yapıcı metot, Firestore için gereklidir.
+    // Empty constructor required for Firestore
     public User() {
     }
 

@@ -6,30 +6,32 @@
     android:orientation="vertical"
     android:padding="8dp">
 
+    <!-- Room ID TextView -->
     <TextView
         android:id="@+id/roomId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Oda ID"
+        android:text="Room ID"
         android:textColor="#FFFFFF"
         android:textSize="16sp"
         android:textStyle="bold" />
 
+    <!-- Occupancy Rate TextView -->
     <TextView
         android:id="@+id/occupancy"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:text="Doluluk Oranı"
+        android:text="Occupancy Rate"
         android:textColor="#FFFFFF" />
 
-    <!-- Odalara giriş butonu -->
+    <!-- Enter Room Button -->
     <Button
         android:id="@+id/roomButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:backgroundTint="@color/colorPrimary"
-        android:text="Odaya Giriş Yap" />
+        android:text="Enter Room" />
 
 </LinearLayout>

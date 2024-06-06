@@ -31,22 +31,23 @@ public class ChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
+        // Get user ID from intent
         userId = getIntent().getStringExtra("userId");
-        //if (userId == null) {
-        //Toast.makeText(this, "User ID not found", Toast.LENGTH_SHORT).show();
-          //  finish();
-           // return;
-        //}
 
+        // Initialize Firestore
         db = FirebaseFirestore.getInstance();
+
+        // Initialize UI elements
         listViewMessages = findViewById(R.id.listViewMessages);
         editTextMessage = findViewById(R.id.editTextMessage);
         buttonSend = findViewById(R.id.buttonSend);
 
+        // Setup message list and adapter
         messageList = new ArrayList<>();
         messageAdapter = new MessageAdapter(this, messageList);
         listViewMessages.setAdapter(messageAdapter);
 
+        // Set send button click listener
         buttonSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -54,9 +55,11 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
+        // Load existing messages
         loadMessages();
     }
 
+    // Send a new message to Firestore
     private void sendMessage() {
         String messageText = editTextMessage.getText().toString().trim();
         if (messageText.isEmpty()) {
@@ -73,6 +76,7 @@ public class ChatActivity extends AppCompatActivity {
                 .addOnFailureListener(e -> Toast.makeText(ChatActivity.this, "Failed to send message", Toast.LENGTH_SHORT).show());
     }
 
+    // Load messages from Firestore
     private void loadMessages() {
         CollectionReference messagesRef = db.collection("messages");
         messagesRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -83,6 +87,7 @@ public class ChatActivity extends AppCompatActivity {
                     return;
                 }
 
+                // Update message list
                 messageList.clear();
                 for (QueryDocumentSnapshot document : snapshots) {
                     Message message = document.toObject(Message.class);

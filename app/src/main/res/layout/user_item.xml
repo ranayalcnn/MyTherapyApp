@@ -5,6 +5,7 @@
     android:orientation="horizontal"
     android:padding="8dp">
 
+    <!-- Name TextView -->
     <TextView
         android:id="@+id/textViewName"
         android:layout_width="0dp"
@@ -12,6 +13,7 @@
         android:layout_weight="1"
         android:text="Name" />
 
+    <!-- Disorder TextView -->
     <TextView
         android:id="@+id/textViewDisorder"
         android:layout_width="wrap_content"

@@ -1,6 +1,5 @@
 package com.example.therapyapp;
 
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -30,20 +29,26 @@ public class FilterUsersActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_filter_users);
 
+        // Initialize Firestore
         db = FirebaseFirestore.getInstance();
+
+        // Initialize UI elements
         listViewUsers = findViewById(R.id.listViewUsers);
         spinnerDisorder = findViewById(R.id.spinnerDisorder);
         buttonFilter = findViewById(R.id.buttonFilter);
 
+        // Setup spinner with disorder options
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.disorders_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerDisorder.setAdapter(adapter);
 
+        // Setup user list and adapter
         userList = new ArrayList<>();
         userAdapter = new UserAdapter(this, userList);
         listViewUsers.setAdapter(userAdapter);
 
+        // Set filter button click listener
         buttonFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -52,6 +57,7 @@ public class FilterUsersActivity extends AppCompatActivity {
             }
         });
 
+        // Set list item click listener
         listViewUsers.setOnItemClickListener((parent, view, position, id) -> {
             User selectedUser = userList.get(position);
             // Start ChatActivity and pass user details
@@ -60,9 +66,11 @@ public class FilterUsersActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
+        // Load all users initially
         loadUsers();
     }
 
+    // Load all users from Firestore
     private void loadUsers() {
         CollectionReference usersRef = db.collection("users");
         usersRef.get().addOnCompleteListener(task -> {
@@ -80,6 +88,7 @@ public class FilterUsersActivity extends AppCompatActivity {
         });
     }
 
+    // Filter users by selected disorder
     private void filterUsersByDisorder(String disorder) {
         CollectionReference usersRef = db.collection("users");
         usersRef.whereEqualTo("disorder", disorder).get().addOnCompleteListener(task -> {

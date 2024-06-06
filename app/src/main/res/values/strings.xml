@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">TherapyApp</string>
     <string name="login">Login</string>
-    <string name="don_t_you_have_an_account_sign_up">Don\'t you have an account? Sign up.</string>
+    <string name="don_t_you_have_an_account_sign_up">Don't you have an account? Sign up.</string>
     <string name="password">Password</string>
 
     <string name="logo">Logo</string>
@@ -21,7 +21,6 @@
         <item>Depression</item>
         <item>Anxiety</item>
         <item>Bipolar</item>
-        <item>OKB</item>
-        <!-- Diğer bozuklukları ekleyin -->
+        <item>OCD</item>
     </string-array>
 </resources>

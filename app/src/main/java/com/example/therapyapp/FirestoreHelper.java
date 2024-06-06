@@ -13,8 +13,8 @@ import java.util.Map;
 public class FirestoreHelper {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+    // Save user data to Firestore
     public void saveUserData(String userId, String email) {
-        // Firestore'da kullanıcı verilerini saklamak için
         Map<String, Object> userData = new HashMap<>();
         userData.put("email", email);
 
@@ -23,13 +23,13 @@ public class FirestoreHelper {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        // Kullanıcı verileri başarıyla kaydedildi
+                        // User data saved successfully
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        // Kullanıcı verilerini kaydederken bir hata oluştu
+                        // Error occurred while saving user data
                     }
                 });
     }
