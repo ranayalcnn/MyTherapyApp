@@ -1,6 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">TherapyApp</string>
+    <string name="login">Login</string>
+    <string name="don_t_you_have_an_account_sign_up">Don\'t you have an account? Sign up.</string>
+    <string name="password">Password</string>
+
+    <string name="logo">Logo</string>
+    <string name="e_mail">E-mail</string>
+    <string name="register">Register</string>
+    <string name="name">Name</string>
+    <string name="surname">Surname</string>
+    <string name="already_have_an_account_sign_in">Already have an account? Sign in</string>
+    <string name="problem">Problem</string>
+    <string name="apply_filters">Apply Filters</string>
+    <string name="voice_call">Voice Call</string>
+    <string name="result_will_appear_here">Result will appear here</string>
+    <string name="start_voice_call">Start Voice Call</string>
 
     <string-array name="disorders_array">
         <item>Depression</item>

@@ -2,19 +2,35 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#E9000000"
+    android:background="@drawable/background_image"
+    android:gravity="center"
     android:padding="16dp">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="150dp"
+        android:layout_marginTop="-100dp"
+        android:layout_marginBottom="16dp"
+        android:contentDescription="@string/logo"
+        android:src="@drawable/appicon" />
 
     <EditText
         android:id="@+id/usernameEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:hint="E-mail"
-        android:inputType="text"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:autofillHints="None"
+        android:ems="18"
+        android:hint="@string/e_mail"
+        android:inputType="textEmailAddress"
         android:minHeight="48dp"
-        android:textColor="#FCFFFFFF"
-        android:textColorHint="#F8F4F4" />
+        android:padding="9dp"
+        android:textColor="@color/white"
+        android:textColorHint="#F8F4F4"
+        android:textSize="17sp" />
 
     <EditText
         android:id="@+id/passwordEditText"
@@ -22,26 +38,35 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/usernameEditText"
         android:layout_marginBottom="16dp"
-        android:hint="Password"
+        android:autofillHints="none"
+        android:hint="@string/password"
         android:inputType="textPassword"
         android:minHeight="48dp"
-        android:textColorHint="#F8F4F4" />
+        android:textColor="@color/white"
+        android:textColorHint="#F8F4F4"
+        android:textSize="16sp" />
+
 
     <Button
         android:id="@+id/loginButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/passwordEditText"
-        android:text="Login" />
+        android:text="@string/login"
+        android:backgroundTint="@color/colorPrimary" />
 
     <TextView
         android:id="@+id/registerTextView"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="@string/don_t_you_have_an_account_sign_up"
+        android:textColor="@color/white"
+        android:textStyle="bold"
         android:layout_below="@id/loginButton"
         android:layout_marginTop="16dp"
-        android:gravity="center"
-        android:text="Register"
-        android:textColor="@color/white" />
+        android:layout_centerHorizontal="true"
+        android:padding="5dp"
+        android:textSize="14sp"/>
+
 
 </RelativeLayout>

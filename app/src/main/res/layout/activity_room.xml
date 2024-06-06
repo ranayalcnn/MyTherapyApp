@@ -21,7 +21,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/roomTextView"
-        android:text="Sesli Arama Başlat"
+        android:text="Start Voice Call"
+        android:backgroundTint="@color/colorPrimary"
         android:layout_marginTop="16dp" />
 
     <!-- Kullanıcı Listesi ListView -->

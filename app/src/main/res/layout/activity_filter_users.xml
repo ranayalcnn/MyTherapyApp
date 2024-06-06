@@ -4,22 +4,30 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="@drawable/background_image">
 
     <Spinner
         android:id="@+id/spinnerDisorder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="48dp" />
+        android:minHeight="48dp"
+        android:background="@drawable/custom_spinner_background"
+        android:theme="@style/CustomSpinnerStyle"
+        android:textColor="@color/textcolor" />
 
     <Button
         android:id="@+id/buttonFilter"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Filter" />
+        android:text="@string/apply_filters"
+        android:textColor="@android:color/white"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="@color/colorPrimary"/>
 
     <ListView
         android:id="@+id/listViewUsers"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent" />
 </LinearLayout>
